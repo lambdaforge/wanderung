@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [io.replikativ/datahike "0.2.1-SNAPSHOT"]
                  [com.datomic/datomic-free "0.9.5697" :scope "provided"]]
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
   :repl-options {:init-ns wanderung.core})
