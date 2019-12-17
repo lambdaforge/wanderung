@@ -1,14 +1,14 @@
 # wanderung
 
-A Clojure library designed to ... well, that part is up to you.
+Migration tool for Datahike from and to other databases.
 
 ## Usage
 
-FIXME
+TODO
 
 ## License
 
-Copyright © 2019 FIXME
+Copyright © 2019 lambdaforge UG (haftungsbeschränkt)
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
