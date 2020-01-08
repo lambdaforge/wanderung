@@ -1,5 +1,5 @@
 (ns wanderung.datomic
-  (:require [datomic.api :as d])
+  (:require [datomic.client.api :as d])
   (:import [java.util Date]))
 
 (defn extract-datomic-data [conn]
