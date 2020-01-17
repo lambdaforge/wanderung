@@ -6,6 +6,9 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [io.replikativ/datahike "0.2.2-SNAPSHOT"]
                  [com.datomic/client-cloud "0.8.78" :scope "provided"]
+                 [com.layerware/hugsql "0.5.1" :scope "provided"]
+                 [org.postgresql/postgresql "42.2.9" :scope "provided"]
+                 [com.h2database/h2 "1.4.196"]
                  #_[com.datomic/datomic-free "0.9.5697" :scope "provided"]]
   :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
   :repl-options {:init-ns wanderung.core})
