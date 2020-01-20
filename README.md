@@ -5,7 +5,10 @@ Migration tool for Datahike from other databases.
 ## Usage
 
 Make sure [Leiningen](https://leiningen.org/) is installed. Create a project and add 
-[![Clojars Project](http://clojars.org/io.lambdaforge/wanderung/latest-version.svg)](http://clojars.org/io.lambdaforge/wanderung) to dependencies as well as the drivers required for your database (e.g. Datomic-Cloud, Postgresql, H2, ...).
+
+[![Clojars Project](http://clojars.org/io.lambdaforge/wanderung/latest-version.svg)](http://clojars.org/io.lambdaforge/wanderung) 
+
+to dependencies as well as the drivers required for your database (e.g. Datomic-Cloud, Postgresql, H2, ...).
 
 ### Example SQL Migration with H2
 ```clojure
