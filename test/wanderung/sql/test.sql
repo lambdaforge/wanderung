@@ -1,4 +1,5 @@
--- resources/sql/example.sql
+-- test/wanderung/sql/characters.sql
+-- Copied from https://www.hugsql.org/ examples
 -- The Princess Bride Characters
 
 -- :name create-characters-table
@@ -13,7 +14,6 @@ create table characters (
   specialty  varchar(40),
   created_at timestamp not null default current_timestamp
 )
-
 
 /* The create-character-table definition above uses the full,
 long-hand "-- :key :value" syntax to specify the :command and
@@ -77,20 +77,3 @@ where name like :name-like
 -- :doc Characters with returned columns specified
 select :i*:cols from characters
 where id in (:v*:ids)
-
--- :name all-tables
-show tables
-
--- :name all-schema
-select * from information_schema.columns
-where table_name = :table_name
-
--- :snip select-snip
-select :i*:cols
-
--- :snip from-snip
-from :i*:tables
-
--- :name snip-query :? :*
-:snip:select
-:snip:from

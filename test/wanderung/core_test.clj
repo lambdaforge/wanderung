@@ -1,6 +1,6 @@
 (ns wanderung.core-test
   (:require [clojure.test :refer :all]
-            [wanderung.core :refer [datomic->datahike]]
+            [wanderung.core :refer [datomic-free->datahike]]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [datahike.api :as d]
@@ -45,12 +45,11 @@
             @(dt/transact datomic-conn (vec new-entities))))
 
         ;; migrate to Datahike
-        (datomic->datahike datomic-uri datahike-uri)
+        (datomic-free->datahike datomic-uri datahike-uri)
 
         (let [datahike-conn (d/connect datahike-uri)
               q1 '[:find (count ?e)
                    :where [?e :name _]]
               datomic-db (dt/db datomic-conn)]
           (is (= (dt/q q1 datomic-db) (d/q q1 @datahike-conn)))
-          (is (= (mapv  :db/ident schema) (-> @datahike-conn :rschema :db/ident vec)))
-          )))))
+          (is (= (mapv  :db/ident schema) (-> @datahike-conn :rschema :db/ident vec))))))))
