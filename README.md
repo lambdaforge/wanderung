@@ -31,7 +31,7 @@ to dependencies as well as the drivers required for your database (e.g. Datomic-
 (d/q '[:find (count ?e) :where [?e _ _]] @conn)
 ```
 
-Have a look at the [sql-test]("test/wanderung/sql_test.clj") namespace for a more elaborated SQL example.
+Have a look at the [sql-test](test/wanderung/sql_test.clj) namespace for a more elaborated SQL example.
 
 ## License
 
