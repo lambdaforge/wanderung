@@ -1,15 +1,14 @@
 (ns wanderung.core-test
   (:require [clojure.test :refer :all]
-            [wanderung.core :refer [datomic-free->datahike]]
+            #_[wanderung.core :refer [datomic-free->datahike]]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
-            [datahike.api :as d]
-            [datomic.api :as dt]))
+            [datahike.api :as d]))
 
 (s/def ::name (s/and string? #(< 10 (count %) 100)))
 
-;; TODO: release databases, add proper fixtures
-(deftest datomic->datahike-test
+;; TODO find proper way to integrate datomic free with datomic cloud
+#_(deftest datomic->datahike-test
   (testing "Migrate data from Datomic to Datahike"
     (let [schema [{:db/ident       :name
                    :db/valueType   :db.type/string
