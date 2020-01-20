@@ -14,11 +14,22 @@ create table characters (
   created_at timestamp not null default current_timestamp
 )
 
-/* ...snip... */
 
--- A :result value of :n below will return affected rows:
+/* The create-character-table definition above uses the full,
+long-hand "-- :key :value" syntax to specify the :command and
+:result.  We can save some typing by using the short-hand notation
+as the second and (optionally) third values for the :name.  Below, the
+:! is equivalent to ":command :!", where :! is an alias for
+:execute.  The default :result is :raw when not specified, so
+there is no need to specify it as the third value. */
+
+-- :name drop-characters-table :!
+-- :doc Drop characters table if exists
+drop table if exists characters
+
+-- A :result value of :n below will return affected row count:
 -- :name insert-character :! :n
--- :doc Insert a single character returning affected row count
+-- :doc Insert a single character
 insert into characters (name, specialty)
 values (:name, :specialty)
 
@@ -27,7 +38,20 @@ values (:name, :specialty)
 insert into characters (name, specialty)
 values :tuple*:characters
 
-/* ...snip... */
+-- :name update-character-specialty :! :n
+update characters
+set specialty = :specialty
+where id = :id
+
+-- :name delete-character-by-id :! :n
+delete from characters where id = :id
+
+-- A ":result" value of ":*" specifies a vector of records
+-- (as hashmaps) will be returned
+-- :name all-characters :? :*
+-- :doc Get all characters
+select * from characters
+order by id
 
 -- A ":result" value of ":1" specifies a single record
 -- (as a hashmap) will be returned
@@ -36,13 +60,37 @@ values :tuple*:characters
 select * from characters
 where id = :id
 
+-- :name character-by-name :? :1
+-- :doc Get character by case-insensitive name
+select * from characters
+where upper(name) = upper(:name)
+
+-- :name characters-by-name-like :?
+-- :doc Get characters by name like, :name-like should include % wildcards
+select * from characters
+where name like :name-like
+
 -- Let's specify some columns with the
 -- identifier list parameter type :i* and
--- use a value list parameter type :v* for IN()
+-- use a value list parameter type :v* for SQL IN()
 -- :name characters-by-ids-specify-cols :? :*
 -- :doc Characters with returned columns specified
 select :i*:cols from characters
 where id in (:v*:ids)
 
--- :name all-characters
-select * from characters
+-- :name all-tables
+show tables
+
+-- :name all-schema
+select * from information_schema.columns
+where table_name = :table_name
+
+-- :snip select-snip
+select :i*:cols
+
+-- :snip from-snip
+from :i*:tables
+
+-- :name snip-query :? :*
+:snip:select
+:snip:from

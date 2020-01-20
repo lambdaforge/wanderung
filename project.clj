@@ -9,6 +9,8 @@
                  [com.layerware/hugsql "0.5.1" :scope "provided"]
                  [org.postgresql/postgresql "42.2.9" :scope "provided"]
                  [com.h2database/h2 "1.4.196"]
+                 [camel-snake-kebab "0.4.1"]
+                 [clj-time "0.15.2"]
                  #_[com.datomic/datomic-free "0.9.5697" :scope "provided"]]
   :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
   :repl-options {:init-ns wanderung.core})
