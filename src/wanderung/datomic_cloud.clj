@@ -29,5 +29,5 @@
          (->> (d/q (update-in query [:args] conj tid))
               (map update-schema-attr)
               (sort-by first)
-              (into [[tid :db/txInstant tinst tid true]]))
-         txs)))))
+              (into [[tid :db/txInstant tinst tid true]])))
+       txs))))
