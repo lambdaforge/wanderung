@@ -7,6 +7,7 @@
                  [io.replikativ/datahike "0.2.2-SNAPSHOT"]
                  [clj-time "0.15.2"]
                  [com.datomic/client-cloud "0.8.78" :scope "provided"]
+                 [com.cognitect/transit-clj "0.8.313"]
                  [com.layerware/hugsql "0.5.1" :scope "provided"]]
   :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]
                                   [com.datomic/datomic-free "0.9.5697"]
