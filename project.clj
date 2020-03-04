@@ -6,6 +6,6 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [io.replikativ/datahike "0.2.2-SNAPSHOT"]
                  [com.datomic/client-cloud "0.8.78" :scope "provided"]
-                 #_[com.datomic/datomic-free "0.9.5697" :scope "provided"]]
+                 [com.cognitect/transit-clj "0.8.313"]]
   :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
   :repl-options {:init-ns wanderung.core})
