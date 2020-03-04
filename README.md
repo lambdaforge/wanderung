@@ -4,7 +4,25 @@ Migration tool for Datahike from and to other databases.
 
 ## Usage
 
-TODO
+Make sure your source and target databases exist.
+
+## From Datomic
+```clojure
+(require '[wanderung.core :as w])
+
+(def datomic-cfg {:server-type :ion
+                  :region "eu-west-1"
+                  :system "my-source"
+                  :endpoint "http://entry.my-source.eu-west-1.datomic.net:8182/"
+                  :proxy-port 8182})
+
+(def datomic-name "source-name")
+
+(def datahike-cfg {:backend :file
+                   :path "/tmp/my-target"})
+
+(w/datomic-cloud->datahike datomic-cfg datomic-name datahike-cfg)
+```
 
 ## License
 

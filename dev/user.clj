@@ -17,4 +17,4 @@
 
 (d/create-database datahike-uri)
 
-(w/datomic->datahike datomic-cfg datomic-name datahike-uri)
+(w/datomic-cloud->datahike datomic-cfg datomic-name datahike-uri)
