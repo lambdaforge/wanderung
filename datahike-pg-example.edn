@@ -1,0 +1,6 @@
+{:backend :pg
+ :host "localhost"
+ :port 5432
+ :username "admin"
+ :password "s3cr3t"
+ :path "/my_target"}
