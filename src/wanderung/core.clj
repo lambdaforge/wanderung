@@ -14,7 +14,7 @@
   (let [datomic-conn (dt/connect (dt/client (dissoc datomic-config :name)) {:db-name (:name datomic-config)})
         datomic-data (wdc/extract-datomic-cloud-data datomic-conn)
         datahike-conn (d/connect datahike-config)]
-    @(d/migrate datahike-conn datomic-data)
+    @(d/load-entities datahike-conn datomic-data)
     true))
 
 (defmethod migrate :default [direction _ _]
