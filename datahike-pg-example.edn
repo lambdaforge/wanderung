@@ -1,6 +1,10 @@
-{:backend :pg
- :host "localhost"
- :port 5432
- :username "admin"
- :password "s3cr3t"
- :path "/my_target"}
+{:store {:backend :jdbc
+         :dbtype "postgresql"
+         :user "datahike"
+         :password "is-awesome"
+         :dbname "migration"}
+ ;; uncomment and adjust the following if the database does not exist
+ ;; :schema-flexibility :write
+ ;; :keep-history :true
+ ;; :name "datahike-migration"
+ }

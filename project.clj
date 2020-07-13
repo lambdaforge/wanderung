@@ -4,9 +4,8 @@
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [io.replikativ/datahike "0.2.2-SNAPSHOT"]
+                 [io.replikativ/datahike "0.3.2-SNAPSHOT"]
                  [com.datomic/client-cloud "0.8.78" :scope "provided"]
-                 [io.replikativ/datahike-postgres "0.1.0"]
                  [com.cognitect/transit-clj "0.8.313"]
                  [org.clojure/tools.cli "1.0.194"]]
   :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}

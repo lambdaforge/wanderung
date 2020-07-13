@@ -24,13 +24,13 @@ Alternatively open your Clojure project, add `io.lambdaforge/wanderung` to your 
                   :endpoint    "http://entry.your-system.eu-west-1.datomic.net:8182/"
                   :proxy-port  8182})
 
-(def datahike-cfg {:backend :pg
-                   :host "localhost"
-                   :port 5432
-                   :username "admin"
-                   :password "s3cr3t"
-                   :path "/your-target"})
-
+(def datahike-cfg {:store {:backend :file
+                           :path "/your-data-path"}
+                   :name "from-datomic"
+                   :schema-flexibility :write
+                   :keep-history? true}) 
+;; if the database doesn't exist, wanderung will create a Datahike database
+                           
 (w/migrate [:datomic-cloud :datahike] datomic-cfg datahike-cfg)
 ```
 
