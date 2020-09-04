@@ -4,29 +4,39 @@ Migration tool for Datahike from and to other databases.
 
 ## Usage
 
-Make sure your source and target databases exist.
+Make sure your source and target databases exist. You can run the migration on the commandline:
 
-## From Datomic
+```bash
+lein run -s datomic-cloud.edn -t datahike-pg.edn -d datomic-cloud:datahike
+```
+
+Use `lein run -- -h` for further instructions. See the `*-example.edn` files for `dataomic-cloud` and `datahike-pg` example configurations.
+
+Alternatively open your Clojure project, add `io.lambdaforge/wanderung` to your dependencies, and start a REPL:
+
 ```clojure
 (require '[wanderung.core :as w])
 
-(def datomic-cfg {:server-type :ion
-                  :region "eu-west-1"
-                  :system "my-source"
-                  :endpoint "http://entry.my-source.eu-west-1.datomic.net:8182/"
-                  :proxy-port 8182})
+(def datomic-cfg {:name "your-database"
+                  :server-type :ion
+                  :region      "eu-west-1"
+                  :system      "your-system"
+                  :endpoint    "http://entry.your-system.eu-west-1.datomic.net:8182/"
+                  :proxy-port  8182})
 
-(def datomic-name "source-name")
-
-(def datahike-cfg {:backend :file
-                   :path "/tmp/my-target"})
-
-(w/datomic-cloud->datahike datomic-cfg datomic-name datahike-cfg)
+(def datahike-cfg {:store {:backend :file
+                           :path "/your-data-path"}
+                   :name "from-datomic"
+                   :schema-flexibility :write
+                   :keep-history? true}) 
+;; if the database doesn't exist, wanderung will create a Datahike database
+                           
+(w/migrate [:datomic-cloud :datahike] datomic-cfg datahike-cfg)
 ```
 
 ## License
 
-Copyright © 2019 lambdaforge UG (haftungsbeschränkt)
+Copyright © 2020 lambdaforge UG (haftungsbeschränkt)
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at

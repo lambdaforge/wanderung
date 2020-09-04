@@ -1,0 +1,10 @@
+{:store {:backend :jdbc
+         :dbtype "postgresql"
+         :user "datahike"
+         :password "is-awesome"
+         :dbname "migration"}
+ ;; uncomment and adjust the following if the database does not exist
+ ;; :schema-flexibility :write
+ ;; :keep-history :true
+ ;; :name "datahike-migration"
+ }

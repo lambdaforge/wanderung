@@ -1,0 +1,6 @@
+{:name "your-database"
+ :server-type :ion
+ :region      "eu-west-1"
+ :system      "your-system"
+ :endpoint    "http://entry.your-system.eu-west-1.datomic.net:8182/"
+ :proxy-port  8182}
