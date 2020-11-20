@@ -4,7 +4,8 @@
             [wanderung.datomic-cloud :as wdc]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :refer [split]]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [datahike-jdbc.core])
   (:gen-class))
 
 (defmulti migrate (fn [direction source-configuration target-configuration] direction))
