@@ -99,9 +99,8 @@
 
                (let [target-conn (d/connect target-config)
                      q1 '[:find (count ?e)
-                          :where [?e :name _]]
-                     source-db (d/db source-conn)]
-                 (is (= (d/q q1 source-db)
+                          :where [?e :name _]]]
+                 (is (= (d/q q1 @source-conn)
                         (d/q q1 @target-conn)))
                  (is (= (-> @source-conn :rschema :db/ident vec)
                         (-> @target-conn :rschema :db/ident vec))))))))
