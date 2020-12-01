@@ -1,10 +1,11 @@
 (ns wanderung.core-test
-  (:require [clojure.test :refer :all]
-            [wanderung.core :refer [datomic-cloud->datahike]]
+  (:require [clojure.test :refer [deftest testing is]]
+            [wanderung.core :refer [migrate]]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [datahike.api :as d]
-            [datomic.api :as dt]))
+   ;  [datomic.api :as dt]
+            ))
 
 (s/def ::name (s/and string? #(< 10 (count %) 100)))
 
@@ -54,3 +55,53 @@
           (is (= (dt/q q1 datomic-db) (d/q q1 @datahike-conn)))
           (is (= (mapv  :db/ident schema) (-> @datahike-conn :rschema :db/ident vec)))
           )))))
+
+(deftest datahike->datahike-test
+  (testing "Migrate data from one Datahike instance to another"
+           (let [schema [{:db/ident       :name
+                          :db/valueType   :db.type/string
+                          :db/cardinality :db.cardinality/one}
+                         {:db/ident       :sibling
+                          :db/valueType   :db.type/ref
+                          :db/cardinality :db.cardinality/many}]
+                 source-config {:store {:backend :mem
+                                        :dbname  "migration-source"}}
+                 target-config {:store {:backend :file
+                                        :path "/tmp/migration-target"
+                                        :dbname  "migration-target"}}]
+
+             (d/delete-database source-config)
+             (d/create-database source-config)
+
+             (d/delete-database target-config)
+             (d/create-database target-config)
+
+             (let [source-conn (d/connect source-config)]
+
+               ;; init schema in source instance
+               (d/transact source-conn schema)
+
+               ;; generate data in source instance
+               (dotimes [_ 100]
+                 (let [possible-siblings (->> (d/db source-conn)
+                                              (d/q '[:find ?e :where [?e :name _]])
+                                              (take 10)
+                                              vec)
+                       new-entities (->> (gen/sample (s/gen ::name) 100)
+                                         (map (fn [entity]
+                                                (if (empty? possible-siblings)
+                                                  {:name entity}
+                                                  {:name entity :sibling (rand-nth possible-siblings)}))))]
+                   (d/transact source-conn (vec new-entities))))
+
+               ;; migrate to target instance
+               (migrate [:datahike :datahike] source-config target-config)
+
+               (let [target-conn (d/connect target-config)
+                     q1 '[:find (count ?e)
+                          :where [?e :name _]]
+                     source-db (d/db source-conn)]
+                 (is (= (d/q q1 source-db)
+                        (d/q q1 @target-conn)))
+                 (is (= (-> @source-conn :rschema :db/ident vec)
+                        (-> @target-conn :rschema :db/ident vec))))))))
