@@ -50,10 +50,11 @@
 
      ;; The value: If it is a reference to another entity,
      ;; the correct entity id needs to be figured out.
-     (cond
-       (= value tid) transaction-temp-id
-       (ref-attribs attrib) (map-value-ref transaction-context value)
-       :default value)]))
+     (if (ref-attribs attrib)
+       (if (= value tid)
+         transaction-temp-id
+         (map-value-ref transaction-context value))
+       value)]))
 
 (defn- tx-data-from-datoms [transaction-context datoms]
   "Map datoms to list-forms to be the tx-data of a transaction"
