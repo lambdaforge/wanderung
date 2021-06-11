@@ -1,4 +1,5 @@
-{:store {:backend :jdbc
+{:wanderung/type :datahike
+ :store {:backend :jdbc
          :dbtype "postgresql"
          :user "datahike"
          :password "is-awesome"

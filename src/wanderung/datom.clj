@@ -50,3 +50,53 @@ This implementation is only an approximation but good enough for figuring out wh
         (comp (map (fn [[k v]] (if (= :db.type/ref (:db/valueType v)) (:db/ident v))))
               (filter some?))
         entity-attribute-map))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  Datoms similarity: Used for sanity checking
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- inc-nil [x]
+  (inc (or x 0)))
+
+(defn- build-eid-features
+  "Constructs a map from each entity id to a feature value that is invariant of entity id assignment"
+  [ref-attrib datoms]
+  (let []
+    (reduce
+     (fn [dst [tid transaction-group]]
+       (reduce
+        (fn [dst [eid attr value _ add?]]
+          (let [step (fn [dst id what & data] (update-in dst [id [tid add? attr what data]] inc-nil))]
+            (if (ref-attrib attr)
+              (if (= eid value)
+                (step dst eid :both)
+                (-> dst
+                    (step eid :eid)
+                    (step value :value)))
+              (step dst eid :eid value))))
+        dst
+        transaction-group))
+     {}
+     (map-indexed vector (transaction-groups datoms)))))
+
+(defn- datoms-feature
+  "Compute a 'feature' value of all the datoms that is invariant of the entity id mapping"
+  [datoms]
+  (let [ref-attrib (-> datoms
+                       datoms->entity-attribute-map
+                       ref-attrib-set)
+        eid-map (build-eid-features ref-attrib datoms)]
+    (reduce
+     (fn [dst [eid attr value tid add?]]
+       (let [key [(eid-map eid) attr (if (ref-attrib attr) (eid-map value) value) (eid-map tid) add?]]
+         (update dst key inc-nil)))
+     {}
+     datoms)))
+
+(defn similar-datoms?
+  "Returns true if two sequences of datoms represent the same database. It generally returns false if they don't represent the same database, but can in rare cases return true. This function can nevertheless be used for sanity checking in order to detect common errors."
+  [datoms-a datoms-b]
+  (= (datoms-feature datoms-a)
+     (datoms-feature datoms-b)))
