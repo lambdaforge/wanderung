@@ -64,12 +64,8 @@ Please see https://github.com/lambdaforge/wanderung/pull/5.")))
                     (mapv :wanderung/type [source-configuration
                                            target-configuration])))
 
-(defmethod migrate [:datomic :datahike] [datomic-config datahike-config]
-  (let [datomic-conn (datomic-connect datomic-config)
-        datomic-data (wdc/extract-datomic-cloud-data datomic-conn)
-        datahike-conn (datahike-maybe-create-and-connect datahike-config)]
-    @(d/load-entities datahike-conn datomic-data)
-    true))
+#_(defmethod migrate [:datahike :datahike] [src-cfg tgt-cfg]
+    ... optimized implementation for specific migration goes here ...)
 
 (defmethod migrate :default [src tgt]
   (->> (datoms-from-storage src) (datoms-to-storage tgt)))
