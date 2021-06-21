@@ -2,6 +2,7 @@
   (:require [datahike.api :as d]
             [datomic.client.api :as dt]
             [wanderung.datomic-cloud :as wdc]
+            [wanderung.datahike :as wd]
             [wanderung.datom :as datom]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :refer [split]]
@@ -52,8 +53,9 @@
     result))
 
 (defmethod datoms-from-storage :datahike [storage]
-  (throw (RuntimeException. "datoms-from-storage not yet implemented for datahike. 
-Please see https://github.com/lambdaforge/wanderung/pull/5.")))
+  (-> storage
+      dh/connect
+      wd/extract-datahike-data))
 
 (defmethod datoms-to-storage :datahike [storage datoms]
   @(d/load-entities (datahike-maybe-create-and-connect storage) datoms))
