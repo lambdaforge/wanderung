@@ -36,6 +36,13 @@ Alternatively open your Clojure project, add `io.lambdaforge/wanderung` to your 
 (w/migrate datomic-cfg datahike-cfg)
 ```
 
+## Tests
+
+Before using Wanderung for performing a migration, you may wish to run tests that to check that Wanderung works correctly. In order to do so, you need to perform the following steps:
+
+1. Install [Datomic dev-local](https://docs.datomic.com/cloud/dev-local.html).
+2. Run the tests by calling `lein test`. In case they fail or in case there are errors, do `lein clean` and attempt to run the tests again.
+
 ## License
 
 Copyright © 2020 lambdaforge UG (haftungsbeschränkt)
