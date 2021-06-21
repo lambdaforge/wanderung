@@ -54,7 +54,7 @@
 
 (defmethod datoms-from-storage :datahike [storage]
   (-> storage
-      dh/connect
+      d/connect
       wd/extract-datahike-data))
 
 (defmethod datoms-to-storage :datahike [storage datoms]
