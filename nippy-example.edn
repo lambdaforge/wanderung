@@ -1,0 +1,3 @@
+;; Store the raw datoms as nippy-encoded data in a file.
+{:wanderung/type :nippy
+ :filename "backups/mybackup.nippy"}

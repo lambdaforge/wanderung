@@ -7,7 +7,7 @@ Migration tool for Datahike from and to other databases.
 Make sure your source and target databases exist. You can run the migration on the commandline:
 
 ```bash
-lein run -s datomic-cloud.edn -t datahike-pg.edn -d datomic-cloud:datahike
+lein run -s datomic-cloud.edn -t datahike-pg.edn
 ```
 
 Use `lein run -- -h` for further instructions. See the `*-example.edn` files for `dataomic-cloud` and `datahike-pg` example configurations.
@@ -17,22 +17,31 @@ Alternatively open your Clojure project, add `io.lambdaforge/wanderung` to your 
 ```clojure
 (require '[wanderung.core :as w])
 
-(def datomic-cfg {:name "your-database"
+(def datomic-cfg {:wanderung/type :datomic
+                  :name "your-database"
                   :server-type :ion
                   :region      "eu-west-1"
                   :system      "your-system"
                   :endpoint    "http://entry.your-system.eu-west-1.datomic.net:8182/"
                   :proxy-port  8182})
 
-(def datahike-cfg {:store {:backend :file
+(def datahike-cfg {:wanderung/type :datahike
+                   :store {:backend :file
                            :path "/your-data-path"}
                    :name "from-datomic"
                    :schema-flexibility :write
-                   :keep-history? true}) 
+                   :keep-history? true})
 ;; if the database doesn't exist, wanderung will create a Datahike database
-                           
-(w/migrate [:datomic-cloud :datahike] datomic-cfg datahike-cfg)
+
+(w/migrate datomic-cfg datahike-cfg)
 ```
+
+## Tests
+
+Before using Wanderung for performing a migration, you may wish to run tests that to check that Wanderung works correctly. In order to do so, you need to perform the following steps:
+
+1. Install [Datomic dev-local](https://docs.datomic.com/cloud/dev-local.html).
+2. Run the tests by calling `lein test`. In case they fail or in case there are errors, do `lein clean` and attempt to run the tests again.
 
 ## License
 
