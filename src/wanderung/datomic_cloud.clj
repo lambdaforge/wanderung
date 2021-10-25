@@ -92,35 +92,22 @@
              :tempids {}}
             transaction-groups)))
 
-
+(defn create-schema-mapping [conn]
+  (let [db (d/db conn)
+        query '[:find ?e ?ident
+                :where
+                [?e :db/ident ?ident]]]
+    (into {} (d/q query db))))
 
 (defn extract-datomic-cloud-data [conn]
-  (let [db (d/db conn)
-        txs (sort-by first (d/q '[:find ?tx ?inst
-                                  :in $ ?bf
-                                  :where
-                                  [?tx :db/txInstant ?inst]
-                                  [(< ?bf ?inst)]]
-                                db
-                                (java.util.Date. 70)))
-        schema-attrs #{:db/cardinality :db/valueType :db/unique}
-        id->ident (->> (d/q '[:find ?e ?id :where [?e :db/ident ?id]] db)
-                       (into {}))
-        query {:query '[:find ?e ?at ?v ?t ?added
-                        :in $ ?t
-                        :where
-                        [?e ?a ?v ?t ?added]
-                        [?a :db/ident ?at]
-                        (not [?a :db/ident :db/txInstant])]
-               :args [(d/history db)]}]
-    (letfn [(update-schema-attr [[_ a _ _ _ :as entity]]
-              (if (schema-attrs a)
-                (update entity 2 id->ident)
-                entity))]
-      (mapcat
-       (fn [[tid tinst]]
-         (->> (d/q (update-in query [:args] conj tid))
-              (map update-schema-attr)
-              (sort-by first)
-              (into [[tid :db/txInstant tinst tid true]])))
-       txs))))
+  (let [start-tx 6
+        schema-mapping (create-schema-mapping conn)
+        map-db-ident (map (fn [[e a v tx added]]
+                            (let [new-a (schema-mapping a)]
+                              [e new-a (if (#{:db.install/valueType :db/valueType :db/cardinality :db/unique} new-a)
+                                         (schema-mapping v)
+                                         v) tx added])))
+        data-extract (mapcat (fn [{:keys [data]}]
+                               (into [] map-db-ident data)))
+        tx-data (d/tx-range conn {:start start-tx})]
+    (into [] data-extract tx-data)))
