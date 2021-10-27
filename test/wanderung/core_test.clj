@@ -5,8 +5,7 @@
             [datomic.client.api :as dt]
             [clojure.edn :as edn]
             [taoensso.timbre :as timbre]
-            [clojure.java.io :as io]
-            [datahike.api :as d])
+            [clojure.java.io :as io])
   (:import [java.io File]))
 
 (timbre/set-level! :warn)
@@ -48,24 +47,24 @@
 
 (defn setup-data [tx-fn conn]
   (tx-fn conn {:tx-data [{:db/ident :person/name
-                                   :db/valueType :db.type/string
-                                   :db/unique :db.unique/identity
-                                   :db/cardinality :db.cardinality/one}
-                                  {:db/ident :person/age
-                                   :db/valueType :db.type/long
-                                   :db/cardinality :db.cardinality/one}
-                                  {:db/ident :person/siblings
-                                   :db/valueType :db.type/ref
-                                   :db/cardinality :db.cardinality/many}]})
+                          :db/valueType :db.type/string
+                          :db/unique :db.unique/identity
+                          :db/cardinality :db.cardinality/one}
+                         {:db/ident :person/age
+                          :db/valueType :db.type/long
+                          :db/cardinality :db.cardinality/one}
+                         {:db/ident :person/siblings
+                          :db/valueType :db.type/ref
+                          :db/cardinality :db.cardinality/many}]})
   (tx-fn conn {:tx-data [{:db/id -1
-                                   :person/name "Alice"
-                                   :person/age 25}
-                                  {:db/id -2
-                                   :person/name "Bob"
-                                   :person/age 35}
-                                  {:person/name "Charlie"
-                                   :person/age 45
-                                   :person/siblings [-1 -2]}]}))
+                          :person/name "Alice"
+                          :person/age 25}
+                         {:db/id -2
+                          :person/name "Bob"
+                          :person/age 35}
+                         {:person/name "Charlie"
+                          :person/age 45
+                          :person/siblings [-1 -2]}]}))
 
 (deftest test-nippy-migration
   (let [a {:wanderung/type :nippy

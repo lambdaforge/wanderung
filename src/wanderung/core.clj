@@ -20,8 +20,11 @@
 
 ;;; Datomic
 (defn datomic-connect [datomic-config]
-  (dt/connect (dt/client (dissoc datomic-config :name))
-              {:db-name (:name datomic-config)}))
+  (println "➜ Connecting to Datomic...")
+  (let [result (dt/connect (dt/client (dissoc datomic-config :name))
+                           {:db-name (:name datomic-config)})]
+    (println "  ✓ Done")
+    result))
 
 (defmethod datoms-from-storage :datomic [storage]
   (-> storage
@@ -58,7 +61,8 @@
       wd/extract-datahike-data))
 
 (defmethod datoms-to-storage :datahike [storage datoms]
-  @(d/load-entities (datahike-maybe-create-and-connect storage) datoms))
+  @(d/load-entities (datahike-maybe-create-and-connect storage) datoms)
+  true)
 
 ;;;------- Migrations -------
 
