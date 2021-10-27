@@ -99,12 +99,19 @@
                 [?e :db/ident ?ident]]]
     (into {} (d/q query db))))
 
-(defn extract-datomic-cloud-data [conn]
-  (let [start-tx 6
+(defn extract-datomic-cloud-data
+  "Extracts all transactions from Datomic with keyword attributes given a Datomic connection.
+  Internally Datomic uses the first transactions to initialize the system schema and identifiers
+  which are Datomic specific and not relevant for import.
+  Currently, it takes 5 transactions, so the 6th is the first user specific one."
+  [conn]
+  (let [system-attributes #{:db.install/valueType :db/valueType :db/cardinality :db/unique}
+        start-tx 6                                          ;; first user transaction
         schema-mapping (create-schema-mapping conn)
         map-db-ident (map (fn [[e a v tx added]]
                             (let [new-a (schema-mapping a)]
-                              [e new-a (if (#{:db.install/valueType :db/valueType :db/cardinality :db/unique} new-a)
+                              (assert new-a)
+                              [e new-a (if (system-attributes new-a)
                                          (schema-mapping v)
                                          v) tx added])))
         data-extract (mapcat (fn [{:keys [data]}]
