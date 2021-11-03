@@ -109,5 +109,5 @@
                                          v) tx added])))
         data-extract (mapcat (fn [{:keys [data]}]
                                (into [] map-db-ident data)))
-        tx-data (d/tx-range conn {:start start-tx})]
+        tx-data (d/tx-range conn {:start start-tx :limit -1})]
     (into [] data-extract tx-data)))
