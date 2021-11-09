@@ -1,7 +1,7 @@
 (ns wanderung.datom
   (:require [clojure.spec.alpha :as spec]))
 
-(spec/def :datom/eid number?)
+(spec/def :datom/eid (spec/or :id number? :tempid string?))
 (spec/def :datom/attribute keyword?)
 (spec/def :datom/value any?)
 (spec/def :datom/transaction-id :datom/eid)
