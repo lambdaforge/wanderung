@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.lambdaforge</groupId>
   <artifactId>wanderung</artifactId>
@@ -18,7 +17,7 @@
     <url>https://github.com/lambdaforge/wanderung</url>
     <connection>scm:git:git://github.com/lambdaforge/wanderung.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/lambdaforge/wanderung.git</developerConnection>
-    <tag>a5d6d5b6e2f3018a996dd2aad04d477938900aeb</tag>
+    <tag>ff03f749ee3df495cb5f89cbeea0ab74c561f580</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -76,7 +75,7 @@
     <dependency>
       <groupId>io.replikativ</groupId>
       <artifactId>datahike</artifactId>
-      <version>0.3.3-SNAPSHOT</version>
+      <version>0.3.7-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <artifactId>konserve</artifactId>
@@ -87,7 +86,7 @@
     <dependency>
       <groupId>com.datomic</groupId>
       <artifactId>client-cloud</artifactId>
-      <version>0.8.78</version>
+      <version>0.8.105</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -95,11 +94,6 @@
       <artifactId>client-pro</artifactId>
       <version>0.9.63</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.datomic</groupId>
-      <artifactId>dev-local</artifactId>
-      <version>0.9.232</version>
     </dependency>
     <dependency>
       <groupId>com.cognitect</groupId>
@@ -120,6 +114,12 @@
       <groupId>org.clojure</groupId>
       <artifactId>test.check</artifactId>
       <version>0.9.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.datomic</groupId>
+      <artifactId>dev-local</artifactId>
+      <version>0.9.232</version>
       <scope>test</scope>
     </dependency>
     <dependency>
