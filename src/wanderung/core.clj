@@ -7,8 +7,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :refer [split]]
             [clojure.java.io :as io]
-            [taoensso.nippy :as nippy]
-            [datahike-jdbc.core])
+            [taoensso.nippy :as nippy])
   (:gen-class))
 
 
@@ -140,13 +139,15 @@
           (println summary))
         (execute-migration options)))))
 
+
 (comment
 
-  (def cfg (-> "datahike-file.edn" slurp read-string))
+  (def cfg (-> "datahike-file-test.edn" slurp read-string))
+
+  (d/create-database cfg)
 
   (def conn (d/connect cfg))
 
-  (d/datoms @conn :eavt nil)
-
+  (d/transact conn [{:name "Anne"} {:name "Bernard"} {:name "Cecille"}])
 
   )
