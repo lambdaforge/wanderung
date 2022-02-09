@@ -7,7 +7,7 @@ Migration tool for Datahike from and to other databases.
 Make sure your source and target databases exist. You can run the migration on the commandline using [clojure CLI](https://clojure.org/reference/deps_and_cli):
 
 ```bash
-clj -M:run-m -s datomic-cloud.edn -t datahike-pg.edn
+clj -M:run-m -s datomic-cloud.edn -t datahike-file.edn
 ```
 
 Use `clj -M:run-m -h` for further instructions. See the `*-example.edn` files for `dataomic-cloud`, `datahike-file` or `nippy` example configurations.
