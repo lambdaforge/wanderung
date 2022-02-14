@@ -81,7 +81,7 @@
 
 (defprotocol Creator
   (administer-system [client])
-  (list-databases [client arg-map] )
+  (list-databases [client arg-map])
   (create-database [client arg-map])
   (delete-database  [client arg-map]))
 

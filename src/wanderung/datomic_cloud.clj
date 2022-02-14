@@ -35,7 +35,7 @@
         ref-attribs (:ref-attribs transaction-context)
         _ (assert ref-attribs)
         temp-eid (temp-id eid)]
-    [ ;; Whether to add or retract
+    [;; Whether to add or retract
      (if add? :db/add :db/retract)
 
      ;; The entity id: either it is a temp id for a new entity,

@@ -1,7 +1,6 @@
 (ns wanderung.datahike
   (:require [datahike.api :as d]))
 
-
 (def find-tx-datoms
   '[:find ?tx ?inst
     :in $ ?bf
@@ -24,9 +23,9 @@
         query {:query find-datoms-in-tx
                :args [(d/history db)]}]
     (mapcat
-      (fn [[tid tinst]]
-        (->> (d/q (update-in query [:args] conj tid))
-             (sort-by first)
-             (into [[tid :db/txInstant tinst tid true]])))
-      txs)))
+     (fn [[tid tinst]]
+       (->> (d/q (update-in query [:args] conj tid))
+            (sort-by first)
+            (into [[tid :db/txInstant tinst tid true]])))
+     txs)))
 

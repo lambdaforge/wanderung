@@ -10,7 +10,6 @@
             [taoensso.nippy :as nippy])
   (:gen-class))
 
-
 ;;;------- Basic datoms interface -------
 
 ;; Two elementary methods for moving datoms to and from a database.
@@ -45,10 +44,10 @@
 ;;; Datahike
 (defn datahike-maybe-create-and-connect [config]
   (when (not (d/database-exists? config))
-       (println "➜ Datahike database does not exist.")
-       (println "➜ Creating database...")
-       (d/create-database config)
-       (println "  ✓ Done"))
+    (println "➜ Datahike database does not exist.")
+    (println "➜ Creating database...")
+    (d/create-database config)
+    (println "  ✓ Done"))
   (println "➜ Connecting to Datahike...")
   (let [result (d/connect config)]
     (println "  ✓ Done")
@@ -124,7 +123,6 @@
                          (println "  ✓ Success: Datoms look the same.")
                          (println "ERROR: The datoms differ between source and target.")))
                      (println "ERROR: The target does not support reading datoms")))))))
-
 
 (defn -main [& args]
   (let [{options :options

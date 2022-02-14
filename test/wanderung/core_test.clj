@@ -150,10 +150,10 @@
                              (map first)
                              (map (fn [{:keys [db/unique] :as attr}]
                                     (cond-> attr
-                                            true (dissoc :db/id)
-                                            true (update :db/valueType :db/ident)
-                                            true (update :db/cardinality :db/ident)
-                                            (some? unique) (update :db/unique :db/ident))))
+                                      true (dissoc :db/id)
+                                      true (update :db/valueType :db/ident)
+                                      true (update :db/cardinality :db/ident)
+                                      (some? unique) (update :db/unique :db/ident))))
                              set)
               dh-result (->> (dh/q query
                                    dh-db
@@ -243,10 +243,10 @@
                              (map first)
                              (map (fn [{:keys [db/unique] :as attr}]
                                     (cond-> attr
-                                            true (dissoc :db/id)
-                                            true (update :db/valueType :db/ident)
-                                            true (update :db/cardinality :db/ident)
-                                            (some? unique) (update :db/unique :db/ident))))
+                                      true (dissoc :db/id)
+                                      true (update :db/valueType :db/ident)
+                                      true (update :db/cardinality :db/ident)
+                                      (some? unique) (update :db/unique :db/ident))))
                              set)]
           (is (= dh-result
                  dt-result)))))))
