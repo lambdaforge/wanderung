@@ -33,7 +33,7 @@ jobs:
           root: /home/circleci/
           paths:
             - .m2
-            - lambdaforge
+            - replikativ
   build:
     executor: tools/clojurecli
     steps:
@@ -49,7 +49,7 @@ jobs:
           root: /home/circleci/
           paths:
             - .m2
-            - lambdaforge
+            - replikativ
   test:
     executor: tools/clojurecli
     steps:
