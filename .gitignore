@@ -9,3 +9,10 @@ profiles.clj
 .hgignore
 .hg/
 .idea
+/.clj-kondo
+/.lsp
+/.classpath
+/.project
+/.settings
+*.iml
+/.cpcache
