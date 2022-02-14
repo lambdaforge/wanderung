@@ -138,16 +138,3 @@
           (println "USAGE:")
           (println summary))
         (execute-migration options)))))
-
-
-(comment
-
-  (def cfg (-> "datahike-file-test.edn" slurp read-string))
-
-  (d/create-database cfg)
-
-  (def conn (d/connect cfg))
-
-  (d/transact conn [{:name "Anne"} {:name "Bernard"} {:name "Cecille"}])
-
-  )

@@ -14,18 +14,18 @@
   [_]
   (b/delete {:path "target"}))
 
+
 (defn jar
-  [_]
-  (b/write-pom {:class-dir class-dir
-                :src-pom "./template/pom.xml"
-                :lib lib
-                :version version
-                :basis basis
-                :src-dirs ["src"]})
-  (b/copy-dir {:src-dirs ["src" "resources"]
-               :target-dir class-dir})
-  (b/jar {:class-dir class-dir
-          :jar-file jar-file}))
+  [opts]
+  (-> opts
+      (assoc :class-dir class-dir
+             :src-pom "./template/pom.xml"
+             :lib lib
+             :version version
+             :basis basis
+             :jar-file jar-file
+             :src-dirs ["src"])
+      bb/jar))
 
 
 (defn test "Run the tests." [opts]
@@ -35,12 +35,12 @@
   (-> opts
       (assoc :lib lib :version version)
       (bb/run-tests)
-      (bb/clean)
-      (bb/jar)))
+      bb/clean
+      bb/jar))
 
 (defn install "Install the JAR locally." [opts]
   (-> opts
-      (bb/jar)
+      jar
       (bb/install)))
 
 (defn deploy "Deploy the JAR to Clojars." [opts]
@@ -60,4 +60,3 @@
                            :content-type "application/java-archive"})
       :url
       println))
-
