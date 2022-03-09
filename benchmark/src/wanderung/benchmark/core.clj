@@ -126,10 +126,3 @@
                                         (d/create-database target)
                                         (timed (w/migrate source target)))))]
               (print-results {:t (avg-variance results)} output))))))))
-
-(comment
-
-  (run-benchmarks! "-o" "results.edn" "-u" "10" "-p" "10" "-n" "10000" "-e" "100")
-
-
-  )
