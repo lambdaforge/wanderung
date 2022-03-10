@@ -3,7 +3,9 @@
             [taoensso.timbre :as log]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.java.io :as io]
-            [datahike.api :as d]))
+            [datahike.api :as d])
+  (:import [java.util Date])
+  (:gen-class))
 
 (def valid-chars
   (map char (concat (range 48 58)
@@ -80,7 +82,7 @@
      (spit output-file results :append true)
      (println results))))
 
-(defn run-benchmarks! [& args]
+(defn -main [& args]
   (log/set-level! :info)
   (let [{options :options
          summary :summary
@@ -104,7 +106,9 @@
                                (assoc :name target-name))
                     _ (println "Target config" target)
                     {:keys [t]} (timed (w/migrate source target))]
-                (print-results {:t t} output)))
+                (print-results {:t t
+                                :date (Date.)
+                                :options options} output)))
             (let [_ (println "No source given. Using random databases...")
                   source-name (str "wanderung_s_" (random-str 8))
                   source {:wanderung/type :datahike
@@ -125,4 +129,6 @@
                                         (d/delete-database target)
                                         (d/create-database target)
                                         (timed (w/migrate source target)))))]
-              (print-results {:t (avg-variance results)} output))))))))
+              (print-results {:t (avg-variance results)
+                              :date (Date.)
+                              :options options} output))))))))
