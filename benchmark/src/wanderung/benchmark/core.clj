@@ -129,6 +129,10 @@
                                         (d/delete-database target)
                                         (d/create-database target)
                                         (timed (w/migrate source target)))))]
+              (println "Cleaning up random databases...")
+              (d/delete-database source)
+              (d/delete-database target)
+              (println "Done")
               (print-results {:t (avg-variance results)
                               :date (Date.)
                               :options options} output))))))))
