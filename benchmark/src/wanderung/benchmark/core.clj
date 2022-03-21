@@ -50,7 +50,16 @@
    ["-t" "--target TARGET" "Target EDN configuration file"
     :parse-fn identity
     :validate [#(.exists (io/file %)) "Target configuration does not exist."]]
-   ["-h" "--help"]])
+   ["-b" "--backend BACKEND" "Index backend"
+    :parse-fn keyword
+    :default :file
+    :validate [#(#{:file :mem} %) "Invalid index type."]]
+   ["-i" "--index INDEX" "index type"
+    :parse-fn keyword
+    :default :hitchhiker-tree
+    :validate [#(#{:hitchhiker-tree :persistent-set} %) "Invalid index type."]]
+   ["-h" "--help"]
+   ["-r" "--refs"]])
 
 (defn init-source [source tx-count upsert-count entities-count]
   (d/delete-database source)
@@ -94,7 +103,7 @@
           (println "Run migrations to datahike from various sources")
           (println "USAGE:")
           (println summary))
-        (let [{:keys [sample tx-count upsert-count entities-count source target output]} options]
+        (let [{:keys [sample tx-count upsert-count entities-count source target output index backend]} options]
           (println "Used options:" options)
           (if (some? source)
             (if (some? target)
@@ -112,17 +121,22 @@
             (let [_ (println "No source given. Using random databases...")
                   source-name (str "wanderung_s_" (random-str 8))
                   source {:wanderung/type :datahike
-                          :store {:backend :file
-                                  :path (str (System/getProperty "java.io.tmpdir") "/" source-name)}
+                          :store (merge {:backend backend}
+                                        (when (= :mem backend)
+                                          {:id source-name})
+                                        (when (= :file backend)
+                                          {:path (str (System/getProperty "java.io.tmpdir") "/" source-name)}))
                           :keep-history? true
                           :name source-name
                           :schema-flexibility :write
-                          :attribute-refs? false}
+                          :attribute-refs? (some? (:refs options))
+                          :index (keyword "datahike.index" (name index))}
                   _ (println "Source config" source)
                   _ (init-source source tx-count upsert-count entities-count)
                   target-name (str "wanderung_t_" (random-str 8))
                   target (-> source
-                             (assoc-in [:store :path]  (str (System/getProperty "java.io.tmpdir") "/" target-name))
+                             #_(assoc-in [:store :path]  (str (System/getProperty "java.io.tmpdir") "/" target-name))
+                             (assoc-in [:store :id] target-name)
                              (assoc :name target-name))
                   _ (println "Target config" target)
                   results (vec (repeatedly sample (fn []
@@ -136,3 +150,14 @@
               (print-results {:t (avg-variance results)
                               :date (Date.)
                               :options options} output))))))))
+
+(comment
+
+
+  (-main "-p" "5" "-n" "1000" "-u" "1" "-e" "1" "-i" "persistent-set" "-b" "mem" "-r")
+
+  (-main "-h")
+
+
+
+  )
