@@ -5,10 +5,9 @@
             [wanderung.datahike :as wd]
             [wanderung.datom :as datom]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.string :refer [split]]
             [clojure.java.io :as io]
             [taoensso.nippy :as nippy])
-  (:gen-class))
+  (:import [clojure.lang IExceptionInfo]))
 
 ;;;------- Basic datoms interface -------
 
@@ -94,8 +93,8 @@
       slurp
       read-string))
 
-(defn execute-migration [options]
-  (let [{:keys [source target help check]} options
+(defn migration [options]
+  (let [{:keys [source target check]} options
         src-cfg (load-config source)
         tgt-cfg (load-config target)
         src-type (:wanderung/type src-cfg)
@@ -110,7 +109,7 @@
       (:wanderung/read-only? tgt-cfg)
       (println "Cannot migrate to read-only database.")
 
-      :default (do
+      :else (do
                  (println "➜ Start migrating from" src-type "to" tgt-type "...")
                  (migrate src-cfg tgt-cfg)
                  (println "  ✓ Done")
@@ -135,4 +134,13 @@
           (println "Run migrations to datahike from various sources")
           (println "USAGE:")
           (println summary))
-        (execute-migration options)))))
+        (try
+          (migration options)
+          (catch Throwable t
+            (println (.getMessage t))
+            (when-not (instance? IExceptionInfo t)
+              (.printStackTrace t))
+            (System/exit 1))
+          (finally
+            (shutdown-agents)))))))
+
