@@ -6,7 +6,7 @@
          com.cognitect/transit-clj {:mvn/version "0.8.313"}
          com.taoensso/nippy        {:mvn/version "3.1.1"}
          org.clojure/tools.cli     {:mvn/version "1.0.206"}}
- :tools/usage {:ns-default wanderung.core}
+ :tools/usage {:ns-default wanderung.tools}
  :aliases
  {:run-m  {:main-opts ["-m" "wanderung.core"]}
   :dev    {:extra-deps {org.clojure/test.check {:mvn/version "0.9.0"}}}
