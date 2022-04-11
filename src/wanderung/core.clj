@@ -93,13 +93,20 @@
       slurp
       read-string))
 
+(defn help [{:keys [summary]}]
+  (println "Run migrations to datahike from various sources")
+  (println "USAGE:")
+  (println summary))
+
 (defn migration [options]
-  (let [{:keys [source target check]} options
+  (let [{:keys [source target check help]} options
         src-cfg (load-config source)
         tgt-cfg (load-config target)
         src-type (:wanderung/type src-cfg)
         tgt-type (:wanderung/type tgt-cfg)]
     (cond
+      help (help options)
+
       (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
       (println "Cannot use" src-type "as source database.")
 
