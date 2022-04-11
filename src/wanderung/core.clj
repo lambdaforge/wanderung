@@ -93,10 +93,15 @@
       slurp
       read-string))
 
-(defn help [{:keys [summary]}]
-  (println "Run migrations to datahike from various sources")
-  (println "USAGE:")
-  (println summary))
+(defn print-help
+  ([]
+   (print-help nil))
+  ([_]
+   (println "Run migrations to datahike from various sources")
+   (println "USAGE:")
+   (println (->> cli-options
+                 (parse-opts {} cli-options)
+                 :summary))))
 
 (defn migration [options]
   (let [{:keys [source target check help]} options
@@ -104,31 +109,31 @@
         tgt-cfg (load-config target)
         src-type (:wanderung/type src-cfg)
         tgt-type (:wanderung/type tgt-cfg)]
-    (cond
-      help (help options)
+    (if help
+      (print-help)
+      (cond
+        (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
+        (println "Cannot use" src-type "as source database.")
 
-      (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
-      (println "Cannot use" src-type "as source database.")
+        (not (multimethod-for-dispatch-value? datoms-to-storage tgt-type))
+        (println "Cannot use" tgt-type "as target database.")
 
-      (not (multimethod-for-dispatch-value? datoms-to-storage tgt-type))
-      (println "Cannot use" tgt-type "as target database.")
+        (:wanderung/read-only? tgt-cfg)
+        (println "Cannot migrate to read-only database.")
 
-      (:wanderung/read-only? tgt-cfg)
-      (println "Cannot migrate to read-only database.")
-
-      :else (do
-              (println "➜ Start migrating from" src-type "to" tgt-type "...")
-              (migrate src-cfg tgt-cfg)
-              (println "  ✓ Done")
-              (when check
-                (if (multimethod-for-dispatch-value? datoms-from-storage tgt-type)
-                  (do
-                    (println "➜ Comparing datoms between source and target...")
-                    (if (datom/similar-datoms? (datoms-from-storage src-cfg)
-                                               (datoms-from-storage tgt-cfg))
-                      (println "  ✓ Success: Datoms look the same.")
-                      (println "ERROR: The datoms differ between source and target.")))
-                  (println "ERROR: The target does not support reading datoms")))))))
+        :else (do
+                (println "➜ Start migrating from" src-type "to" tgt-type "...")
+                (migrate src-cfg tgt-cfg)
+                (println "  ✓ Done")
+                (when check
+                  (if (multimethod-for-dispatch-value? datoms-from-storage tgt-type)
+                    (do
+                      (println "➜ Comparing datoms between source and target...")
+                      (if (datom/similar-datoms? (datoms-from-storage src-cfg)
+                                                 (datoms-from-storage tgt-cfg))
+                        (println "  ✓ Success: Datoms look the same.")
+                        (println "ERROR: The datoms differ between source and target.")))
+                    (println "ERROR: The target does not support reading datoms"))))))))
 
 (defn -main [& args]
   (let [{options :options
@@ -150,4 +155,5 @@
             (System/exit 1))
           (finally
             (shutdown-agents)))))))
+
 
