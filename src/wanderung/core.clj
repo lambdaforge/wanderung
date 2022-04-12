@@ -95,22 +95,21 @@
 
 (defn print-help
   ([]
-   (print-help nil))
+   (print-help {}))
   ([_]
-   (println "Run migrations to datahike from various sources")
+   (println "Run migrations with datahike to and from various sources")
    (println "USAGE:")
    (println (->> cli-options
-                 (parse-opts {} cli-options)
+                 (parse-opts {})
                  :summary))))
 
-(defn migration [options]
-  (let [{:keys [source target check help]} options
-        src-cfg (load-config source)
-        tgt-cfg (load-config target)
-        src-type (:wanderung/type src-cfg)
-        tgt-type (:wanderung/type tgt-cfg)]
-    (if help
-      (print-help)
+(defn migration [{:keys [source target check help]}]
+  (if help
+    (print-help)
+    (let [src-cfg (load-config source)
+          tgt-cfg (load-config target)
+          src-type (:wanderung/type src-cfg)
+          tgt-type (:wanderung/type tgt-cfg)]
       (cond
         (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
         (println "Cannot use" src-type "as source database.")
@@ -155,5 +154,3 @@
             (System/exit 1))
           (finally
             (shutdown-agents)))))))
-
-
