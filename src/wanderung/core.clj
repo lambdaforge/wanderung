@@ -97,11 +97,20 @@
   ([]
    (print-help {}))
   ([_]
-   (println "Run migrations with datahike to and from various sources")
+   (println "WANDERUNG")
+   (println "---------")
+   (println "Run migrations with Datahike to and from various sources")
    (println "USAGE:")
-   (println (->> cli-options
-                 (parse-opts {})
-                 :summary))))
+   (println "clj -Twanderung [function] [function args]")
+   (println "FUNCTIONS:")
+   (println "---------")
+   (println "migration :source SOURCE :target TARGET")
+   (println "Description: Migrates from given source file to a target file.")
+   (println "Example: clj -Twanderung migration :source '\"./source-cfg.edn\"' :target '\"target-cfg.edn\"'")
+   (println "---------")
+   (println "help")
+   (println "Description: Prints this lovely help.")
+   (println "Example: clj -Twanderung help")))
 
 (defn migration [{:keys [source target check help]}]
   (if help
