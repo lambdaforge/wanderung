@@ -38,6 +38,36 @@ Alternatively open your Clojure project, add `io.lambdaforge/wanderung` to your 
 You can use `clj -T:build jar` to create a jar file and `clj -T:build install` to install the library in your local maven repository. 
 Take a look at `build.clj` for further commands.
 
+### CLI tools
+
+If you have Clojure [CLI tools](https://clojure.org/guides/deps_and_cli) installed you can install `wanderung` locally and use it as a commandline tool.
+
+Install it with:
+```bash
+clj -Ttools install io.lambdaforge/wanderung '{:git/url "https://github.com/lambdaforge/wanderung" :git/tag "v0.2.65"}' :as wanderung
+```
+
+Make sure it is installed with:
+```bash
+clj -Ttools list
+```
+
+Run it with:
+```bash
+clj -Twanderung migration :source '"./source-cfg.edn"' :target '"./target-cfg.edn"'
+```
+
+Show help with:
+```bash
+clj -Twanderung help
+```
+
+Uninstall it with:
+```bash
+clj -Ttools remove :tool wanderung
+```
+
+
 ## Tests
 
 Before using Wanderung for performing a migration, you may wish to run tests that to check that Wanderung works correctly. In order to do so, you need to perform the following steps:
