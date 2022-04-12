@@ -9,8 +9,6 @@
             [taoensso.nippy :as nippy])
   (:import [clojure.lang IExceptionInfo]))
 
-(set! *warn-on-reflection* false)
-
 ;;;------- Basic datoms interface -------
 
 ;; Two elementary methods for moving datoms to and from a database.
@@ -99,9 +97,8 @@
   ([]
    (help {}))
   ([_]
-   (println "+++++++++")
    (println "WANDERUNG")
-   (println "+++++++++")
+   (println "---------")
    (println "Run migrations with Datahike to and from various sources")
    (println "USAGE:")
    (println "clj -Twanderung [function] [function args]")
