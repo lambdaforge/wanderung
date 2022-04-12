@@ -9,6 +9,8 @@
             [taoensso.nippy :as nippy])
   (:import [clojure.lang IExceptionInfo]))
 
+(set! *warn-on-reflection* false)
+
 ;;;------- Basic datoms interface -------
 
 ;; Two elementary methods for moving datoms to and from a database.
@@ -93,12 +95,13 @@
       slurp
       read-string))
 
-(defn print-help
+(defn help
   ([]
-   (print-help {}))
+   (help {}))
   ([_]
+   (println "+++++++++")
    (println "WANDERUNG")
-   (println "---------")
+   (println "+++++++++")
    (println "Run migrations with Datahike to and from various sources")
    (println "USAGE:")
    (println "clj -Twanderung [function] [function args]")
@@ -112,9 +115,9 @@
    (println "Description: Prints this lovely help.")
    (println "Example: clj -Twanderung help")))
 
-(defn migration [{:keys [source target check help]}]
-  (if help
-    (print-help)
+(defn migration [{:keys [source target check] show-help :help}]
+  (if show-help
+    (help)
     (let [src-cfg (load-config source)
           tgt-cfg (load-config target)
           src-type (:wanderung/type src-cfg)
