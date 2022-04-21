@@ -93,55 +93,43 @@
       slurp
       read-string))
 
-(defn help
-  ([]
-   (help {}))
-  ([_]
-   (println "WANDERUNG")
-   (println "---------")
-   (println "Run migrations with Datahike to and from various sources")
-   (println "USAGE:")
-   (println "clj -Twanderung [function] [function args]")
-   (println "FUNCTIONS:")
-   (println "---------")
-   (println "migration :source SOURCE :target TARGET")
-   (println "Description: Migrates from given source file to a target file.")
-   (println "Example: clj -Twanderung migration :source '\"./source-cfg.edn\"' :target '\"target-cfg.edn\"'")
-   (println "---------")
-   (println "help")
-   (println "Description: Prints this lovely help.")
-   (println "Example: clj -Twanderung help")))
+(defn migration [{:keys [source target check]}]
+  (let [read-cfg (fn [cfg] (when (some? cfg)
+                             (if-let [path-from-env (some? (System/getenv cfg))]
+                               path-from-env
+                               (when (.exists (io/file cfg))
+                                 cfg))))]
+    (if-let [source (read-cfg source)]
+      (if-let [target (read-cfg target)]
+        (let [src-cfg  (load-config source)
+              tgt-cfg  (load-config target)
+              src-type (:wanderung/type src-cfg)
+              tgt-type (:wanderung/type tgt-cfg)]
+          (cond
+            (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
+            (println "Cannot use" src-type "as source database.")
 
-(defn migration [{:keys [source target check] show-help :help}]
-  (if show-help
-    (help)
-    (let [src-cfg (load-config source)
-          tgt-cfg (load-config target)
-          src-type (:wanderung/type src-cfg)
-          tgt-type (:wanderung/type tgt-cfg)]
-      (cond
-        (not (multimethod-for-dispatch-value? datoms-from-storage src-type))
-        (println "Cannot use" src-type "as source database.")
+            (not (multimethod-for-dispatch-value? datoms-to-storage tgt-type))
+            (println "Cannot use" tgt-type "as target database.")
 
-        (not (multimethod-for-dispatch-value? datoms-to-storage tgt-type))
-        (println "Cannot use" tgt-type "as target database.")
+            (:wanderung/read-only? tgt-cfg)
+            (println "Cannot migrate to read-only database.")
 
-        (:wanderung/read-only? tgt-cfg)
-        (println "Cannot migrate to read-only database.")
-
-        :else (do
-                (println "➜ Start migrating from" src-type "to" tgt-type "...")
-                (migrate src-cfg tgt-cfg)
-                (println "  ✓ Done")
-                (when check
-                  (if (multimethod-for-dispatch-value? datoms-from-storage tgt-type)
-                    (do
-                      (println "➜ Comparing datoms between source and target...")
-                      (if (datom/similar-datoms? (datoms-from-storage src-cfg)
-                                                 (datoms-from-storage tgt-cfg))
-                        (println "  ✓ Success: Datoms look the same.")
-                        (println "ERROR: The datoms differ between source and target.")))
-                    (println "ERROR: The target does not support reading datoms"))))))))
+            :else (do
+                    (println "➜ Start migrating from" src-type "to" tgt-type "...")
+                    (migrate src-cfg tgt-cfg)
+                    (println "  ✓ Done")
+                    (when check
+                      (if (multimethod-for-dispatch-value? datoms-from-storage tgt-type)
+                        (do
+                          (println "➜ Comparing datoms between source and target...")
+                          (if (datom/similar-datoms? (datoms-from-storage src-cfg)
+                                                     (datoms-from-storage tgt-cfg))
+                            (println "  ✓ Success: Datoms look the same.")
+                            (println "ERROR: The datoms differ between source and target.")))
+                        (println "ERROR: The target does not support reading datoms"))))))
+        (println "ERORR: Invalid target configuration. Must be either file path or environment variable."))
+      (println "ERORR: Invalid source configuration. Must be either file path or environment variable."))))
 
 (defn -main [& args]
   (let [{options :options
