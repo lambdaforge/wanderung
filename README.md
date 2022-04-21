@@ -44,7 +44,7 @@ If you have Clojure [CLI tools](https://clojure.org/guides/deps_and_cli) install
 
 Install it with:
 ```bash
-clj -Ttools install io.lambdaforge/wanderung '{:git/url "https://github.com/lambdaforge/wanderung" :git/tag "v0.2.65"}' :as wanderung
+clj -Ttools install io.lambdaforge/wanderung '{:git/url "https://github.com/lambdaforge/wanderung" :git/tag "v0.2.67"}' :as wanderung
 ```
 
 Make sure it is installed with:
@@ -55,6 +55,18 @@ clj -Ttools list
 Run it with:
 ```bash
 clj -Twanderung migration :source '"./source-cfg.edn"' :target '"./target-cfg.edn"'
+```
+
+or with environment variables either inside `:source` and `:target` with your own naming:
+```bash
+MY_SOURCE_CFG=./source-cfg.edn
+MY_TARGET_CFG=./target-cfg.edn
+clj -Twanderung m :source 'MY_SOURCE_CFG' :target 'MY_TARGET_CFG'
+```
+
+or with global environment variables defined by wanderung:
+```bash
+WANDERUNG_SOURCE=./source-cfg.edn WANDERUNG_TARGET=./target-cfg.edn clj -Twanderung migrate
 ```
 
 Show help with:
