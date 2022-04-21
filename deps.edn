@@ -5,6 +5,7 @@
                com.datomic/client-cloud  {:mvn/version "0.8.105"}
                com.cognitect/transit-clj {:mvn/version "0.8.313"}
                com.taoensso/nippy        {:mvn/version "3.1.1"}
+               environ/environ           {:mvn/version "1.2.0"}
                org.clojure/tools.cli     {:mvn/version "1.0.206"}}
  :tools/usage {:ns-default wanderung.cli}
  :aliases
