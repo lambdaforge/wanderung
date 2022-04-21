@@ -95,10 +95,10 @@
 
 (defn migration [{:keys [source target check]}]
   (let [read-cfg (fn [cfg] (when (some? cfg)
-                            (if-let [path-from-env (some? (System/getenv cfg))]
-                              path-from-env
-                              (when (.exists (io/file cfg))
-                                cfg))))]
+                             (if-let [path-from-env (some? (System/getenv cfg))]
+                               path-from-env
+                               (when (.exists (io/file cfg))
+                                 cfg))))]
     (if-let [source (read-cfg source)]
       (if-let [target (read-cfg target)]
         (let [src-cfg  (load-config source)
