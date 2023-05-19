@@ -35,6 +35,10 @@
 (defmethod datoms-from-storage :nippy [storage]
   (nippy/thaw-from-file (:filename storage)))
 
+;;; Nippy JAR
+(defmethod datoms-from-storage :nippy-jar [storage]
+  (nippy/thaw-from-resource (:filename storage)))
+
 (defmethod datoms-to-storage :nippy [storage datoms]
   (let [filename (:filename storage)]
     (io/make-parents filename)
